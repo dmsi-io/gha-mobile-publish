@@ -1,6 +1,7 @@
 # gha-mobile-publish
 
-The purpose of this GitHub Action is to automate the publishing of mobile apps for internal testing.
+The purpose of this GitHub Action is to automate the publishing of mobile apps for
+internal testing.
 
 ### Usage
 
@@ -13,7 +14,7 @@ on:
       - develop
 
 jobs:
-  test:
+  publish:
     name: Publish
     runs-on: ubuntu-latest
     steps:
