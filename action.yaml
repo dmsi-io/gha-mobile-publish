@@ -16,10 +16,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: true
     - name: Node
       id: node
       uses: actions/setup-node@v2

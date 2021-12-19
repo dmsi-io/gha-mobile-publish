@@ -35,5 +35,5 @@ Default: ''
 
 ```yaml
   with:
-    webhook: https://dmsi.webhook.office.com/...
+    webhook: 'https://dmsi.webhook.office.com/...'
 ```
