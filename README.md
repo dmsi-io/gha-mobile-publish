@@ -25,3 +25,15 @@ jobs:
           expo-password: ${{ secrets.EXPO_PASSWORD }}
 ```
 
+### Optional Params
+
+#### Teams Webhook
+
+Teams Webhook URL to notify on successful build. If none is provided, no call will be made
+
+Default: ''
+
+```yaml
+  with:
+    webhook: https://dmsi.webhook.office.com/...
+```
