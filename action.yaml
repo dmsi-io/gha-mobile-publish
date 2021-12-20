@@ -34,4 +34,4 @@ runs:
       with:
           webhook_url: ${{ inputs.webhook }}
           overwrite: >
-            ${{ format('{title: "Published {} to Expo ({})"}', github.event.repository.name, GITHUB_REF#refs/heads/) }}
+            ${{ format('{title: "Published {} to Expo ({})"}', ${{ github.event.repository.name }}, ${{ GITHUB_REF#refs/heads/ }}) }}
