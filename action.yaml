@@ -33,4 +33,5 @@ runs:
       uses: skitionek/notify-microsoft-teams@master
       with:
           webhook_url: ${{ inputs.webhook }}
-          overwrite: ${{ format('{title{} "Published {} to Expo ({})"}', ":", github.event.repository.name, GITHUB_REF#refs/heads/) }}
+          overwrite: >
+            ${{ format('{title: "Published {} to Expo ({})"}', github.event.repository.name, GITHUB_REF#refs/heads/) }}
