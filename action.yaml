@@ -1,0 +1,36 @@
+name: 'Mobile App Publishing'
+description: 'Publishes the app to Expo for internal testing'
+
+inputs:
+  expo-username:
+    description: 'The username for the expo account being published to'
+    required: true
+  expo-password:
+    description: 'The password for the expo account being published to'
+    required: true
+  webhook:
+    desciption: 'Teams Webhook URL to notify on success'
+    default: ''
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Expo login
+      uses: expo/expo-github-action@v6
+      with:
+        expo-version: latest
+        username: ${{ secrets.EXPO_USER }}
+        password: ${{ secrets.EXPO_PASSWORD }}
+    - name: Update version number # Set the version number to include the commit hash for internal verification
+      run: jq -r --arg VERSION "$(jq -r '.expo.version' < app.json)-$(git rev-parse HEAD | cut -c 1-7)" '.expo.version=$VERSION' < app.json > app2.json && cp app2.json app.json && rm app2.json
+      shell: bash
+    - name: Publish
+      run: expo publish
+      shell: bash
+    - name: Notify Teams
+      if: inputs.webhook != '' && ${{ success() }}
+      uses: skitionek/notify-microsoft-teams@master
+      with:
+          webhook_url: ${{ inputs.webhook }}
+          overwrite: "{title: `Published ${github.event.repository.name} to Expo (${GITHUB_REF#refs/heads/})`}"
