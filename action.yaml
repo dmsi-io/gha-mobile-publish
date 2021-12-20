@@ -9,7 +9,7 @@ inputs:
     description: 'The password for the expo account being published to'
     required: true
   webhook:
-    desciption: 'Teams Webhook URL to notify on success'
+    description: 'Teams Webhook URL to notify on success'
     default: ''
     required: false
 
