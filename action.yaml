@@ -28,9 +28,3 @@ runs:
     - name: Publish
       run: expo publish
       shell: bash
-    - name: Notify Teams
-      if: inputs.webhook != '' && ${{ success() }}
-      uses: skitionek/notify-microsoft-teams@master
-      with:
-          webhook_url: ${{ inputs.webhook }}
-          overwrite: "{title: `Published ${github.event.repository.name} to Expo (${GITHUB_REF#refs/heads/})`}"
