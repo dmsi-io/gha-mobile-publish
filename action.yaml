@@ -20,8 +20,8 @@ runs:
       uses: expo/expo-github-action@v6
       with:
         expo-version: latest
-        username: ${{ secrets.EXPO_USER }}
-        password: ${{ secrets.EXPO_PASSWORD }}
+        username: ${{ inputs.expo-username }}
+        password: ${{ inputs.expo-password }}
     - name: Update version number # Set the version number to include the commit hash for internal verification
       run: jq -r --arg VERSION "$(jq -r '.expo.version' < app.json)-$(git rev-parse HEAD | cut -c 1-7)" '.expo.version=$VERSION' < app.json > app2.json && cp app2.json app.json && rm app2.json
       shell: bash
