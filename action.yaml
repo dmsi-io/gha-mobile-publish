@@ -25,6 +25,7 @@ runs:
     - name: Update version number # Set the version number to include the commit hash for internal verification
       run: jq -r --arg VERSION "$(jq -r '.expo.version' < app.json)-$(git rev-parse HEAD | cut -c 1-7)" '.expo.version=$VERSION' < app.json > app2.json && cp app2.json app.json && rm app2.json
       shell: bash
+      working-directory: ${{ github.action_path }}
     - name: Publish
       run: expo publish
       shell: bash
