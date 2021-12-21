@@ -8,10 +8,6 @@ inputs:
   expo-password:
     description: 'The password for the expo account being published to'
     required: true
-  webhook:
-    description: 'Teams Webhook URL to notify on success'
-    default: ''
-    required: false
 
 runs:
   using: 'composite'
