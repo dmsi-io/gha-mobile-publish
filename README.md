@@ -3,7 +3,15 @@
 The purpose of this GitHub Action is to automate the publishing of mobile apps for
 internal testing.
 
-### Usage
+## Inputs
+
+| NAME            | DESCRIPTION                                        | TYPE      | REQUIRED | DEFAULT                     |
+|:----------------|:---------------------------------------------------|:----------|:---------|:----------------------------|
+| `branch`        | What Expo branch to push to                        | `string`  | `false`  | The current git branch name |
+| `expo-token`    | The token for the expo account being released from | `string`  | `true`   |                             |
+| `message`       | What message to include on the update              | `string`  | `false`  | The last git commit message |
+
+## Usage
 
 ```yaml
 name: Publish
@@ -21,19 +29,5 @@ jobs:
       - name: Publish
         uses: dmsi-io/gha-mobile-publish@main
         with:
-          expo-username: ${{ secrets.EXPO_USER }}
-          expo-password: ${{ secrets.EXPO_PASSWORD }}
-```
-
-### Optional Params
-
-#### Teams Webhook
-
-Teams Webhook URL to notify on successful build. If none is provided, no call will be made
-
-Default: ''
-
-```yaml
-  with:
-    webhook: 'https://dmsi.webhook.office.com/...'
+          expo-token: ${{ secrets.EXPO_TOKEN }}
 ```
