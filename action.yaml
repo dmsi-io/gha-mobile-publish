@@ -2,25 +2,48 @@ name: 'Mobile App Publishing'
 description: 'Publishes the app to Expo for internal testing'
 
 inputs:
-  expo-username:
-    description: 'The username for the expo account being published to'
+  branch:
+    description: 'What Expo branch to push to'
+    required: false
+  expo-token:
+    description: 'The token for the expo account being published to'
     required: true
-  expo-password:
-    description: 'The password for the expo account being published to'
-    required: true
+  message:
+    description: 'What message to include on the update'
+    required: false
+    default: ${{ github.event.head_commit.message }}
 
 runs:
   using: 'composite'
   steps:
     - name: Expo login
-      uses: expo/expo-github-action@v6
+      uses: expo/expo-github-action@v7
       with:
         expo-version: latest
-        username: ${{ inputs.expo-username }}
-        password: ${{ inputs.expo-password }}
+        eas-version: latest
+        token: ${{ inputs.expo-token }}
+
     - name: Update version number # Set the version number to include the commit hash for internal verification
-      run: jq -r --arg VERSION "$(jq -r '.expo.version' < app.json)-$(git rev-parse HEAD | cut -c 1-7)" '.expo.version=$VERSION' < app.json > app2.json && cp app2.json app.json && rm app2.json
+      run: |
+        if [ -f "app.json" ]; then
+          jq -r --arg VERSION "$(jq -r '.expo.version' < app.json)-$(git rev-parse HEAD | cut -c 1-7)" '.expo.version=$VERSION' < app.json > app2.json && cp app2.json app.json && rm app2.json
+        elif [ -f "app.config.ts" ]; then
+          sed -i '' -E -e 's|version:[ \t]+(["\'])([0-9]+(\.[0-9]+)*)["\']|version: \1\2-'"$(git rev-parse HEAD | cut -c 1-7)"'\1|g' app.config.ts
+        elif [ -f "app.config.js" ]; then
+          sed -i '' -E -e 's|version:[ \t]+(["\'])([0-9]+(\.[0-9]+)*)["\']|version: \1\2-'"$(git rev-parse HEAD | cut -c 1-7)"'\1|g' app.config.js
+        fi
       shell: bash
+
+    - name: Get branch name
+      id: get_ref
+      uses: dmsi-io/gha-get-ref@main
+      with:
+        custom_ref: ${{ inputs.branch }}
+
+    - name: Create branch if it doesn't exist
+      run: eas branch:view --limit=1 --non-interactive "${{ steps.get_ref.outputs.ref_name }}" || eas branch:create --non-interactive "${{ steps.get_ref.outputs.ref_name }}"
+      shell: bash
+
     - name: Publish
-      run: expo publish
+      run: eas update --branch="${{ steps.get_ref.outputs.ref_name }}" --message="${{ inputs.message }}"
       shell: bash
