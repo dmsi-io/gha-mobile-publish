@@ -5,11 +5,12 @@ internal testing.
 
 ## Inputs
 
-| NAME            | DESCRIPTION                                        | TYPE      | REQUIRED | DEFAULT                     |
-|:----------------|:---------------------------------------------------|:----------|:---------|:----------------------------|
-| `branch`        | What Expo branch to push to                        | `string`  | `false`  | The current git branch name |
-| `expo-token`    | The token for the expo account being released from | `string`  | `true`   |                             |
-| `message`       | What message to include on the update              | `string`  | `false`  | The last git commit message |
+| NAME         | DESCRIPTION                                          | TYPE      | REQUIRED | DEFAULT                     |
+|:-------------|:-----------------------------------------------------|:----------|:---------|:----------------------------|
+| `branch`     | What Expo branch to push to                          | `string`  | `false`  | The current git branch name |
+| `expo-token` | The token for the expo account being released from   | `string`  | `true`   |                             |
+| `message`    | What message to include on the update                | `string`  | `false`  | The last git commit message |
+| `suffix`     | A version suffix to append to the end of the version | `string`  | `false`  |                             |
 
 ## Usage
 

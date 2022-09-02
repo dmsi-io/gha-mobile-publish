@@ -11,6 +11,9 @@ inputs:
   message:
     description: 'What message to include on the update'
     required: false
+  suffix:
+    description: 'A version suffix to append to the end of the version'
+    required: false
 
 runs:
   using: 'composite'
@@ -22,14 +25,15 @@ runs:
         eas-version: latest
         token: ${{ inputs.expo-token }}
 
-    - name: Update version number # Set the version number to include the commit hash for internal verification
+    - name: Update version number # Set the version number to include a for internal verification
+      if: ${{ inputs.suffix }} != ''
       run: |
         if [ -f "app.json" ]; then
-          jq -r --arg VERSION "$(jq -r '.expo.version' < app.json)-$(git rev-parse HEAD | cut -c 1-7)" '.expo.version=$VERSION' < app.json > app2.json && cp app2.json app.json && rm app2.json
+          jq -r --arg VERSION "$(jq -r '.expo.version' < app.json)-${{ inputs.suffix }}" '.expo.version=$VERSION' < app.json > app2.json && cp app2.json app.json && rm app2.json
         elif [ -f "app.config.ts" ]; then
-          sed -i app.config.ts -E -e 's|version:[ \t]+(["'\''])([0-9]+(\.[0-9]+)*)["'\'']|version: \1\2-'"$(git rev-parse HEAD | cut -c 1-7)"'\1|g'
+          sed -i app.config.ts -E -e 's|version:[ \t]+(["'\''])([0-9]+(\.[0-9]+)*)["'\'']|version: \1\2-'"${{ inputs.suffix }}"'\1|g'
         elif [ -f "app.config.js" ]; then
-          sed -i app.config.js -E -e 's|version:[ \t]+(["'\''])([0-9]+(\.[0-9]+)*)["'\'']|version: \1\2-'"$(git rev-parse HEAD | cut -c 1-7)"'\1|g'
+          sed -i app.config.js -E -e 's|version:[ \t]+(["'\''])([0-9]+(\.[0-9]+)*)["'\'']|version: \1\2-'"${{ inputs.suffix }}"'\1|g'
         fi
       shell: bash
 
