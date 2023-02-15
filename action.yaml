@@ -25,7 +25,7 @@ runs:
         eas-version: latest
         token: ${{ inputs.expo-token }}
 
-    - name: Update version number # Set the version number to include a for internal verification
+    - name: Update version number # Set the version number to include a commit hash for internal verification
       if: ${{ inputs.suffix }} != ''
       run: |
         if [ -f "app.json" ]; then
